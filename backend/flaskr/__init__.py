@@ -42,6 +42,9 @@ def create_app(test_config=None):
         for category in categories:
             category_types.append(category.type)
 
+        if (len(category_types) == 0):
+            abort(404)
+
         return jsonify({
             'success': True,
             'categories': category_types
