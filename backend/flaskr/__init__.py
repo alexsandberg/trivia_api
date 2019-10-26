@@ -10,9 +10,12 @@ QUESTIONS_PER_PAGE = 10
 
 
 def paginate_questions(request, selection):
+    print('PAGE', request.args.get('page'))
     page = request.args.get('page', 1, type=int)
     start = (page - 1) * QUESTIONS_PER_PAGE
     end = start + QUESTIONS_PER_PAGE
+
+    print("START, END", start, end)
 
     questions = [question.format() for question in selection]
     current_questions = questions[start:end]
@@ -80,13 +83,18 @@ def create_app(test_config=None):
         selection = Question.query.all()
         total_questions = len(selection)
         current_questions = paginate_questions(request, selection)
+        print("CURRENT Qs", current_questions)
 
         categories = Category.query.all()
         category_types = []
         for category in categories:
             category_types.append(category.type)
 
+        if (len(current_questions) == 0):
+            abort(404)
+
         return jsonify({
+            'success': True,
             'questions': current_questions,
             'total_questions': total_questions,
             'categories': category_types,
