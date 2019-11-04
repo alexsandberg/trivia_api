@@ -107,7 +107,6 @@ def create_app(test_config=None):
 
     @app.route('/questions/<int:id>', methods=['DELETE'])
     def delete_question(id):
-        print('ROUTE WORKING')
         try:
             # get the question by id
             question = Question.query.filter_by(id=id).one_or_none()
@@ -144,6 +143,7 @@ def create_app(test_config=None):
     @app.route('/questions', methods=['POST'])
     def post_question():
         body = request.get_json()
+        print(body)
 
         new_question = body.get('question', None)
         new_answer = body.get('answer', None)

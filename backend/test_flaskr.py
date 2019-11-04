@@ -19,6 +19,13 @@ class TriviaTestCase(unittest.TestCase):
             'localhost:5432', self.database_name)
         setup_db(self.app, self.database_path)
 
+        self.new_question = {
+            'question': 'Which four states make up the 4 Corners region of the US?',
+            'answer': 'Colorado, New Mexico, Arizona, Utah',
+            'difficulty': 3,
+            'category': '2'
+        }
+
         # binds the app to the current context
         with self.app.app_context():
             self.db = SQLAlchemy()
@@ -46,7 +53,6 @@ class TriviaTestCase(unittest.TestCase):
 
     def test_404_request_beyond_valid_page(self):
         response = self.client().get('/questions?page=100')
-        print('404 RESPONSE: ', response.data)
         data = json.loads(response.data)
 
         self.assertEqual(response.status_code, 404)
@@ -54,12 +60,19 @@ class TriviaTestCase(unittest.TestCase):
         self.assertEqual(data['message'], 'resource not found')
 
     def test_delete_question(self):
+        # first create a new question to be deleted
+        question = Question(question=self.new_question['question'], answer=self.new_question['answer'],
+                            category=self.new_question['category'], difficulty=self.new_question['difficulty'])
+        question.insert()
+
+        # get the id of the new question
+        q_id = question.id
+
         # get number of questions before delete
         questions_before = Question.query.all()
 
         # delete the question and store response
-        response = self.client().delete('/questions/1')
-        print('DELETE RESPONSE: ', response.data)
+        response = self.client().delete('/questions/{}'.format(q_id))
         data = json.loads(response.data)
 
         # get number of questions after delete
@@ -68,10 +81,17 @@ class TriviaTestCase(unittest.TestCase):
         # see if the question has been deleted
         question = Question.query.filter(Question.id == 1).one_or_none()
 
+        # check status code and success message
         self.assertEqual(response.status_code, 200)
         self.assertEqual(data['success'], True)
-        self.assertEqual(data['deleted'], 1)
-        self.assertTrue(questions_before - questions_after == 1)
+
+        # check if question id matches deleted id
+        self.assertEqual(data['deleted'], q_id)
+
+        # check if one less question after delete
+        self.assertTrue(len(questions_before) - len(questions_after) == 1)
+
+        # check if question equals None after delete
         self.assertEqual(question, None)
 
 
