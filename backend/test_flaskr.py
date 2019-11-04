@@ -45,12 +45,34 @@ class TriviaTestCase(unittest.TestCase):
         self.assertTrue(len(data['questions']))
 
     def test_404_request_beyond_valid_page(self):
-        response = self.client().get('/questions?page=500')
+        response = self.client().get('/questions?page=100')
+        print('404 RESPONSE: ', response.data)
         data = json.loads(response.data)
 
         self.assertEqual(response.status_code, 404)
         self.assertEqual(data['success'], False)
         self.assertEqual(data['message'], 'resource not found')
+
+    def test_delete_question(self):
+        # get number of questions before delete
+        questions_before = Question.query.all()
+
+        # delete the question and store response
+        response = self.client().delete('/questions/1')
+        print('DELETE RESPONSE: ', response.data)
+        data = json.loads(response.data)
+
+        # get number of questions after delete
+        questions_after = Question.query.all()
+
+        # see if the question has been deleted
+        question = Question.query.filter(Question.id == 1).one_or_none()
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(data['success'], True)
+        self.assertEqual(data['deleted'], 1)
+        self.assertTrue(questions_before - questions_after == 1)
+        self.assertEqual(question, None)
 
 
 # Make the tests conveniently executable
