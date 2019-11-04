@@ -94,6 +94,34 @@ class TriviaTestCase(unittest.TestCase):
         # check if question equals None after delete
         self.assertEqual(question, None)
 
+    def test_create_new_question(self):
+        # get number of questions before post
+        questions_before = Question.query.all()
+
+        response = self.client().post('/questions', json=self.new_question)
+        data = json.loads(response.data)
+
+        # get number of questions after post
+        questions_after = Question.query.all()
+
+        # see if the question has been created
+        question = Question.query.filter_by(id=data['created']).one_or_none()
+
+        # check status code and success message
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(data['success'], True)
+
+        # check if one more question after post
+        self.assertTrue(len(questions_after) - len(questions_before) == 1)
+
+        # check that question is not None
+        self.assertIsNotNone(question)
+
+    # def test_422_if_book_creation_fails(self):
+    #     res = self.client().post('/books', json=self.new_book)
+    #     data = json.loads(res.data)
+    #     pass
+
 
 # Make the tests conveniently executable
 if __name__ == "__main__":

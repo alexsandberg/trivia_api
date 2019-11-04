@@ -110,7 +110,6 @@ def create_app(test_config=None):
         try:
             # get the question by id
             question = Question.query.filter_by(id=id).one_or_none()
-            print('Question: ', question)
 
             # abort 404 if no question found
             if question is None:
@@ -143,7 +142,6 @@ def create_app(test_config=None):
     @app.route('/questions', methods=['POST'])
     def post_question():
         body = request.get_json()
-        print(body)
 
         new_question = body.get('question', None)
         new_answer = body.get('answer', None)
@@ -161,6 +159,7 @@ def create_app(test_config=None):
             return jsonify({
                 'success': True,
                 'created': question.id,
+                'question_created': question.question,
                 'questions': current_questions,
                 'total_questions': len(Question.query.all())
             })
