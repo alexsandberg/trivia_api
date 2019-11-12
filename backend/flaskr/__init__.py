@@ -218,11 +218,28 @@ def create_app(test_config=None):
   category to be shown.
   '''
 
-    # @app.route('/categories/<int:id>/questions')
-    # def get_questions_by_category(id):
-    #     print('ID: ', id)
-    #     selection = Category.query.filter_by(id=id).all()
-    #     print('SELECTION: ', selection[0].type)
+    @app.route('/categories/<int:id>/questions')
+    def get_questions_by_category(id):
+        # get the category by id
+        category = Category.query.filter_by(id=id).one_or_none()
+
+        # abort 400 for bad request if category isn't found
+        if (category == None):
+            abort(400)
+
+        # get the matching questions
+        selection = Question.query.filter_by(category=category.id).all()
+
+        # paginate the selection
+        paginated = paginate_questions(request, selection)
+
+        # return the results
+        return jsonify({
+            'success': True,
+            'questions': paginated,
+            'total_questions': len(Question.query.all()),
+            'current_category': category.type
+        })
 
     '''
   @TODO:
