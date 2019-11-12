@@ -136,6 +136,24 @@ class TriviaTestCase(unittest.TestCase):
         # check if questions_after and questions_before are equal
         self.assertTrue(len(questions_after) == len(questions_before))
 
+    def test_search_questions(self):
+        # send post request with search term
+        response = self.client().post('/questions/search',
+                                      json={'searchTerm': 'egyptians'})
+
+        # load response data
+        data = json.loads(response.data)
+
+        # check response status code and message
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(data['success'], True)
+
+        # check that number of results = 1
+        self.assertEqual(len(data['questions']), 1)
+
+        # check that id of question in response is correct
+        self.assertEqual(data['questions'][0]['id'], 23)
+
 
 # Make the tests conveniently executable
 if __name__ == "__main__":
