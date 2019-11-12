@@ -82,9 +82,10 @@ def create_app(test_config=None):
         current_questions = paginate_questions(request, selection)
 
         categories = Category.query.all()
-        category_types = []
+        categories_dict = {}
         for category in categories:
-            category_types.append(category.type)
+            categories_dict[category.id] = category.type
+            # category_types.append(category.type)
 
         if (len(current_questions) == 0):
             abort(404)
@@ -93,7 +94,7 @@ def create_app(test_config=None):
             'success': True,
             'questions': current_questions,
             'total_questions': total_questions,
-            'categories': category_types,
+            'categories': categories_dict,
             'current_category': 'test'  # TODO figure this out!
         })
 
@@ -216,6 +217,12 @@ def create_app(test_config=None):
   categories in the left column will cause only questions of that
   category to be shown.
   '''
+
+    # @app.route('/categories/<int:id>/questions')
+    # def get_questions_by_category(id):
+    #     print('ID: ', id)
+    #     selection = Category.query.filter_by(id=id).all()
+    #     print('SELECTION: ', selection[0].type)
 
     '''
   @TODO:
