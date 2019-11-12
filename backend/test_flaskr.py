@@ -154,6 +154,19 @@ class TriviaTestCase(unittest.TestCase):
         # check that id of question in response is correct
         self.assertEqual(data['questions'][0]['id'], 23)
 
+    def test_404_if_search_questions_fails(self):
+        # send post request with search term that should fail
+        response = self.client().post('/questions/search',
+                                      json={'searchTerm': 'abcdefghijk'})
+
+        # load response data
+        data = json.loads(response.data)
+
+        # check response status code and message
+        self.assertEqual(response.status_code, 404)
+        self.assertEqual(data['success'], False)
+        self.assertEqual(data['message'], 'resource not found')
+
 
 # Make the tests conveniently executable
 if __name__ == "__main__":
