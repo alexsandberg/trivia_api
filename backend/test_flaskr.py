@@ -184,6 +184,18 @@ class TriviaTestCase(unittest.TestCase):
         # check that current category returned is science
         self.assertEqual(data['current_category'], 'Science')
 
+    def test_400_if_questions_by_category_fails(self):
+        # send request with category id 100
+        response = self.client().get('/categories/100/questions')
+
+        # load response data
+        data = json.loads(response.data)
+
+        # check response status code and message
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(data['success'], False)
+        self.assertEqual(data['message'], 'bad request')
+
 
 # Make the tests conveniently executable
 if __name__ == "__main__":
