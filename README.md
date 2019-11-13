@@ -1,5 +1,5 @@
 # Full Stack Trivia API Project
-This project is a game where users can test their knowledge answering trivia questions. I wrote the backend API that powers the game (`__init__.py`), as well as the unit test suite (`test_flaskr.py`), while the models and frontend were written by Udacity. The task for the project was to implement the following functionality:
+This project is a game where users can test their knowledge answering trivia questions. The task for the project was to create an API and test suite for implementing the following functionality:
 
 1) Display questions - both all questions and by category. Questions should show the question, category and difficulty rating by default and can show/hide the answer. 
 2) Delete questions.
@@ -424,3 +424,8 @@ The API will return three types of errors:
             }, 
             "success": true
         }
+
+## Authors
+
+Alex Sandberg-Bernard authored the API (`__init__.py`), test suite (`test_flaskr.py`), and this README.<br>
+All other project files, including the models and frontend, were created by [Udacity](https://www.udacity.com/) as a project template for the [Full Stack Web Developer Nanodegree](https://www.udacity.com/course/full-stack-web-developer-nanodegree--nd0044).
