@@ -210,6 +210,10 @@ The API will return three types of errors:
 
 #### POST /questions
 
+This endpoint either creates a new question or returns search results.
+
+1. If <strong>no</strong> search term is included in request:
+
 * General:
   * Creates a new question using JSON request parameters.
   * Returns JSON object with newly created question, as well as paginated questions.
@@ -299,12 +303,13 @@ The API will return three types of errors:
             "total_questions": 20
         }
 
-#### POST /questions/search
+
+2. If search term <strong>is</strong> included in request:
 
 * General:
   * Searches for questions using search term in JSON request parameters.
   * Returns JSON object with paginated matching questions.
-* Sample: `curl http://127.0.0.1:5000/questions/search -X POST -H "Content-Type: application/json" -d '{"searchTerm": "which"}'`<br>
+* Sample: `curl http://127.0.0.1:5000/questions -X POST -H "Content-Type: application/json" -d '{"searchTerm": "which"}'`<br>
 
         {
             "questions": [
