@@ -152,7 +152,7 @@ class TriviaTestCase(unittest.TestCase):
         """Tests search questions success"""
 
         # send post request with search term
-        response = self.client().post('/questions/search',
+        response = self.client().post('/questions',
                                       json={'searchTerm': 'egyptians'})
 
         # load response data
@@ -172,7 +172,7 @@ class TriviaTestCase(unittest.TestCase):
         """Tests search questions failure 404"""
 
         # send post request with search term that should fail
-        response = self.client().post('/questions/search',
+        response = self.client().post('/questions',
                                       json={'searchTerm': 'abcdefghijk'})
 
         # load response data
